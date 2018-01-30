@@ -31,7 +31,7 @@ parser.add_argument( '-p', required=True, default=None , help='Path of the passw
 parser.add_argument( '-u', required=False, default=None , help='target username.')
 args = vars(parser.parse_args())
 
-PasswordFile = args['p']#sys.argv[4]
+PasswordFile = args['p']
 if os.path.exists(args['p']) == False:
     print "[!] \033[1;33mFile Path Dose Not exist !\033[1;m"
     sys.exit()
