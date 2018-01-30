@@ -9,7 +9,9 @@ Wordpress users enumerate and brute force attack
 ```
 # Usage
 ```bash
-python WPBF.py -s http://example.com -p password.txt
+python 0xwpbf.py -s http://example.com -p password.txt
+
+
   -h, --help  show this help message and exit
   -s S        target domain or URL
   -p P        Path of the password file.
