@@ -7,7 +7,6 @@ from requests.exceptions import ConnectionError
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 from tqdm import tqdm
-import commands
 import sys, os, argparse
 reload(sys)
 sys.setdefaultencoding('utf-8')
