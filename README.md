@@ -4,7 +4,8 @@ Wordpress users enumerate and brute force attack
 ![alt text](https://github.com/0xAbdullah/0xWPBF/blob/master/Screenshot.gif)
 # Installation
 ```bash
-1) pip install mechanicalsoup
+1) git clone https://github.com/0xAbdullah/0xWPBF.git
+2) pip install mechanicalsoup
 ```
 # Usage
 ```bash
