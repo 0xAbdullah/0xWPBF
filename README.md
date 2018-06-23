@@ -12,7 +12,7 @@ Wordpress users enumerate and brute force attack
 python 0xwpbf.py -s http://example.com
 [--] The command above extracts username/s active on website automatically
 python 0xwpbf -s http://example.com -e users.txt
-[--] The above command guesses user names on website using a list of usernames
+[--] The command above guesses user names on website using a list of usernames
 python 0xwpbf.py -s http://example.com -u username -p password.txt -t 5
 [--] -u = Target username / -p = Path of password file / -t = Number of threads
 
