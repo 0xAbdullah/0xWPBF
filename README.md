@@ -6,6 +6,7 @@ Wordpress users enumerate and brute force attack
 ```bash
 1) git clone https://github.com/0xAbdullah/0xWPBF.git
 2) pip install mechanicalsoup
+3) pip install PrettyTable
 ```
 # Usage
 ```bash
@@ -29,6 +30,7 @@ python 0xwpbf.py -s http://example.com -u username -p password.txt -t 5
 # Coded By
 Abdullah AlZahrani
 
-Website: www.0xa.tech
-
 Twitter : 0xAbdullah
+
+### G2:
+Dr.Abolalh; Und3r-r00t; Dr.Silent; Null; xSecurity; TA Hacker; 1333Cyb3r; HitmanAlharbi; Ali AlZahrani; Saleh AlZahrani <3
