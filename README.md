@@ -1,7 +1,7 @@
 # 0xWPBF
 Wordpress users enumerate and brute force attack
 # screenshot
-![alt text](https://github.com/0xAbdullah/0xWPBF/blob/master/Screenshot.gif)
+![](https://github.com/0xAbdullah/0xWPBF/blob/master/Screenshot.gif)
 # Installation
 ```bash
 1) git clone https://github.com/0xAbdullah/0xWPBF.git
@@ -10,7 +10,7 @@ Wordpress users enumerate and brute force attack
 # Usage
 ```bash
 python 0xwpbf.py -s http://example.com
-[--] The command above extracts username/s active on website automatically
+[E] Quick scan of the website to identify <Theme & version, WordPress version, Plugins & version, Scanning for Files and Directories, active user>
 python 0xwpbf -s http://example.com -e users.txt
 [--] The command above guesses user names on website using a list of usernames
 python 0xwpbf.py -s http://example.com -u username -p password.txt -t 5
