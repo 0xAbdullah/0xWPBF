@@ -1,7 +1,9 @@
 # 0xWPBF
 Wordpress users enumerate and brute force attack
 # screenshot
-![](https://github.com/0xAbdullah/0xWPBF/blob/master/Screenshot.gif)
+![](https://raw.githubusercontent.com/0xAbdullah/0xWPBF/master/screenshot/Screenshot1.png)
+![](https://raw.githubusercontent.com/0xAbdullah/0xWPBF/master/screenshot/Screenshot2.png)
+![](https://raw.githubusercontent.com/0xAbdullah/0xWPBF/master/screenshot/Screenshot3.png)
 # Installation
 ```bash
 1) git clone https://github.com/0xAbdullah/0xWPBF.git
