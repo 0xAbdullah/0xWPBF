@@ -7,8 +7,8 @@ Wordpress users enumerate and brute force attack
 # Installation
 ```bash
 1) git clone https://github.com/0xAbdullah/0xWPBF.git
-2) pip install mechanicalsoup
-3) pip install PrettyTable
+2) pip2 install mechanicalsoup
+3) pip2 install PrettyTable
 ```
 # Usage
 ```bash
