@@ -4,12 +4,12 @@ Wordpress users enumerate and brute force attack
 ![](https://raw.githubusercontent.com/0xAbdullah/0xWPBF/master/screenshot/Screenshot1.png)
 # Installation
 ```bash
-1) git clone https://github.com/0xAbdullah/0xWPBF.git
+$ git clone https://github.com/0xAbdullah/0xWPBF.git
 ```
 # Usage
 ```bash
 python3 0xwpbf.py -url http://example.com
-[E] Quick scan of the website to identify <Theme & version, WordPress version, Plugins & version, Scanning for Files and Directories, active user>
+[--] Quick scan of the website to identify <Theme & version, WordPress version, Plugins & version, Scanning for Files and Directories, active user>
 python3 0xwpbf -url http://example.com -u admin -p passwordlist.txt
 [--] Launch a WordPress Bruteforce Attack.
 
