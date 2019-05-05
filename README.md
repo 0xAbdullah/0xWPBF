@@ -2,32 +2,24 @@
 Wordpress users enumerate and brute force attack
 # screenshot
 ![](https://raw.githubusercontent.com/0xAbdullah/0xWPBF/master/screenshot/Screenshot1.png)
-![](https://raw.githubusercontent.com/0xAbdullah/0xWPBF/master/screenshot/Screenshot2.png)
-![](https://raw.githubusercontent.com/0xAbdullah/0xWPBF/master/screenshot/Screenshot3.png)
 # Installation
 ```bash
 1) git clone https://github.com/0xAbdullah/0xWPBF.git
-2) pip2 install mechanicalsoup
-3) pip2 install PrettyTable
 ```
 # Usage
 ```bash
-python 0xwpbf.py -s http://example.com
+python3 0xwpbf.py -url http://example.com
 [E] Quick scan of the website to identify <Theme & version, WordPress version, Plugins & version, Scanning for Files and Directories, active user>
-python 0xwpbf -s http://example.com -e users.txt
-[--] The command above guesses user names on website using a list of usernames
-python 0xwpbf.py -s http://example.com -u username -p password.txt -t 5
-[--] -u = Target username / -p = Path of password file / -t = Number of threads
+python3 0xwpbf -s http://example.com -u admin -p passwordlist.txt
+[--] Launch a WordPress Bruteforce Attack.
 
-  -h, --help  show this help message and exit
-  -s S        Target Website.
-  -p P        Password list / Path of password file.
-  -u U        Target username.
-  -e E        Guess usernames / Path of usernames file.
-  -t T        Number of threads.
-
-
-
+  -h, --help    show this help message and exit
+  -url URL      This argument is used to specify the URL of the target
+                WordPress site.
+  -u U          Use this to specify the WordPress username.
+  -p P          Use this to specify the name of the password dictionary file.
+  -m M          Methods for brute force.
+  -proxy PROXY  Supply a proxy. HTTP, HTTPS.
 ```
 ### Coded By
 ```bash
