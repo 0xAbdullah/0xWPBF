@@ -10,7 +10,7 @@ Wordpress users enumerate and brute force attack
 ```bash
 python3 0xwpbf.py -url http://example.com
 [E] Quick scan of the website to identify <Theme & version, WordPress version, Plugins & version, Scanning for Files and Directories, active user>
-python3 0xwpbf -s http://example.com -u admin -p passwordlist.txt
+python3 0xwpbf -url http://example.com -u admin -p passwordlist.txt
 [--] Launch a WordPress Bruteforce Attack.
 
   -h, --help    show this help message and exit
