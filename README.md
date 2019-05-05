@@ -34,7 +34,3 @@ python 0xwpbf.py -s http://example.com -u username -p password.txt -t 5
 Abdullah AlZahrani
 Twitter : 0xAbdullah
 ```
-### G2:
-```bash
-Dr.Abolalh; Und3r-r00t; Dr.Silent; Null; xSecurity; TA Hacker; 1333Cyb3r; HitmanAlharbi; Ali AlZahrani; Saleh AlZahrani <3
-```
