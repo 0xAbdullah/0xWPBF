@@ -17,7 +17,7 @@ print('''
     Twitter: @0xAbdullah | GitHub.com/0xAbdullah
     ''')
 
-parser = argparse.ArgumentParser(description="[--] 0xWPBF website scanner")
+parser = argparse.ArgumentParser(description="[--] 0xWPBF Wordpress scanner")
 parser.add_argument('-url', required=True, default=None, help='This argument is used to specify the URL of the target WordPress site.')
 parser.add_argument('-u', required=False, default=None, help='Use this to specify the WordPress username.')
 parser.add_argument('-p', required=False, default=None, help='Use this to specify the name of the password dictionary file.')
